@@ -3,7 +3,7 @@
 # proj-cost consumes the JSON plan, not .tf files directly. Generate one with:
 #   terraform plan -out=tfplan
 #   terraform show -json tfplan > plan.json
-#   proj-cost breakdown plan.json
+#   proj-cost breakdown --plan-json plan.json
 
 provider "google" {
   project = "my-project"
