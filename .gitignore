@@ -3,3 +3,9 @@ dist/
 *.log
 .DS_Store
 .claude/settings.local.json
+
+# Terraform artifacts (if running the examples)
+.terraform/
+*.tfstate
+*.tfstate.backup
+tfplan
