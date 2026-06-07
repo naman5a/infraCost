@@ -1,0 +1,16 @@
+{
+  "name": "proj-cost",
+  "version": "0.1.0",
+  "description": "Monthly cost estimates for GCP Terraform projects, priced via the Cloud Billing Catalog API",
+  "type": "module",
+  "bin": { "proj-cost": "dist/main.js" },
+  "scripts": {
+    "build": "tsc",
+    "breakdown": "node dist/main.js breakdown"
+  },
+  "engines": { "node": ">=18" },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0"
+  }
+}

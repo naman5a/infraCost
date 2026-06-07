@@ -1,0 +1,132 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.7.0",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "google_compute_instance.app",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "app",
+          "values": {
+            "name": "app-prod",
+            "machine_type": "e2-standard-4",
+            "zone": "asia-south1-a",
+            "boot_disk": [
+              { "initialize_params": [{ "size": 100, "type": "pd-ssd" }] }
+            ],
+            "scheduling": [{ "preemptible": false }]
+          }
+        },
+        {
+          "address": "google_compute_instance.worker",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "worker",
+          "values": {
+            "name": "worker",
+            "machine_type": "n2-custom-4-16384",
+            "zone": "asia-south1-b",
+            "boot_disk": [
+              { "initialize_params": [{ "size": 50, "type": "pd-balanced" }] }
+            ],
+            "scheduling": [{ "preemptible": true }]
+          }
+        },
+        {
+          "address": "google_compute_disk.data",
+          "mode": "managed",
+          "type": "google_compute_disk",
+          "name": "data",
+          "values": { "name": "data-disk", "size": 500, "type": "pd-balanced", "zone": "asia-south1-a" }
+        },
+        {
+          "address": "google_compute_address.ingress",
+          "mode": "managed",
+          "type": "google_compute_address",
+          "name": "ingress",
+          "values": { "name": "ingress-ip", "region": "asia-south1" }
+        },
+        {
+          "address": "google_storage_bucket.assets",
+          "mode": "managed",
+          "type": "google_storage_bucket",
+          "name": "assets",
+          "values": { "name": "assets-bucket", "location": "ASIA-SOUTH1", "storage_class": "STANDARD" }
+        },
+        {
+          "address": "google_sql_database_instance.main",
+          "mode": "managed",
+          "type": "google_sql_database_instance",
+          "name": "main",
+          "values": {
+            "name": "main-db",
+            "database_version": "POSTGRES_15",
+            "region": "asia-south1",
+            "settings": [
+              {
+                "tier": "db-custom-4-16384",
+                "availability_type": "REGIONAL",
+                "disk_size": 100,
+                "disk_type": "PD_SSD"
+              }
+            ]
+          }
+        },
+        {
+          "address": "google_service_account.app",
+          "mode": "managed",
+          "type": "google_service_account",
+          "name": "app",
+          "values": { "account_id": "app-sa" }
+        },
+        {
+          "address": "google_pubsub_topic.events",
+          "mode": "managed",
+          "type": "google_pubsub_topic",
+          "name": "events",
+          "values": { "name": "events" }
+        }
+      ],
+      "child_modules": [
+        {
+          "address": "module.gke",
+          "resources": [
+            {
+              "address": "module.gke.google_container_cluster.primary",
+              "mode": "managed",
+              "type": "google_container_cluster",
+              "name": "primary",
+              "values": {
+                "name": "primary",
+                "location": "asia-south1",
+                "remove_default_node_pool": true,
+                "initial_node_count": 1
+              }
+            },
+            {
+              "address": "module.gke.google_container_node_pool.workers",
+              "mode": "managed",
+              "type": "google_container_node_pool",
+              "name": "workers",
+              "values": {
+                "name": "workers",
+                "location": "asia-south1",
+                "node_count": 3,
+                "node_config": [
+                  { "machine_type": "e2-standard-2", "disk_size_gb": 100, "disk_type": "pd-balanced" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "google": { "expressions": { "region": { "constant_value": "asia-south1" } } }
+    }
+  }
+}
